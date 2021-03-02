@@ -12,14 +12,6 @@ void main() async {
   runApp(MyApp());
 }
 
-// final dummySnapshot = [
-//  {"name": "Filip", "votes": 15},
-//  {"name": "Abraham", "votes": 14},
-//  {"name": "Richard", "votes": 11},
-//  {"name": "Ike", "votes": 10},
-//  {"name": "Justin", "votes": 1},
-// ];
-// final databaseReference  = FirebaseFirestore.instance;
 
 class MyApp extends StatelessWidget {
   @override
@@ -47,10 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-//  Widget _buildBody(BuildContext context) {
-//    // TODO: get actual snapshot from Cloud Firestore
-//    return _buildList(context, dummySnapshot);
-//  }
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('baby').snapshots(),
@@ -85,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(record.name),
           trailing: Text(record.votes.toString()),
           // onTap: () => record.reference.updateData({'votes': record.votes + 1}),
-          onTap: () => record.reference.update({'votes': record.votes + 1}) ,
+          onTap: () => record.reference.update({'votes': FieldValue.increment(1)}) ,
         ),
       ),
     );
@@ -105,6 +93,7 @@ class Record {
 
   Record.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data(), reference: snapshot.reference);
+      // : this.fromMap(snapshot.data, reference: snapshot.reference);
 
   @override
   String toString() => "Record<$name:$votes>";
